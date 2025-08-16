@@ -57,9 +57,12 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
+
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
+
+
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """
@@ -67,10 +70,8 @@ def list_accounts():
     This endpoint will list all Accounts
     """
     app.logger.info("Request to list Accounts")
-
     accounts = Account.query.all()  # Use SQLAlchemy query
     account_list = [account.serialize() for account in accounts]
-
     app.logger.info("Returning [%s] accounts", len(account_list))
     return jsonify(account_list), status.HTTP_200_OK
 
@@ -98,15 +99,12 @@ def update_account(account_id):
     This endpoint will update an Account based on the posted data
     """
     app.logger.info("Request to update an Account with id: %s", account_id)
-
     account = Account.query.get(account_id)
     if not account:
         abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] could not be found.")
-
     data = request.get_json()
     account.deserialize(data)
     account.update()   # make sure update() calls db.session.commit()
-
     return jsonify(account.serialize()), status.HTTP_200_OK
 
 
@@ -120,11 +118,9 @@ def delete_account(account_id):
     This endpoint will delete an Account based on the account_id that is requested
     """
     app.logger.info("Request to delete an Account with id: %s", account_id)
-
     account = Account.query.get(account_id)  # safer than Account.find
     if account:
         account.delete()
-
     return "", status.HTTP_204_NO_CONTENT
 
 
